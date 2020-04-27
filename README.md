@@ -1,2 +1,2 @@
 # LogicaProgramacao
-LP_II_AC3
+Resolução dos exercícios de Linguagem de Programação
