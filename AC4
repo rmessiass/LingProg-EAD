@@ -30,7 +30,7 @@ class Funcionario(Pessoa):
         '''
         super().__init__(nome, idade)
         self.email = email
-        self.carga_horaria_semanal = carga_horaria_semanal
+        self.altera_carga_horaria(carga_horaria_semanal)
         self.salario_hora = 0
         
     def calcula_salario(self) -> float:
@@ -92,10 +92,7 @@ class Programador(Funcionario):
       possui sempre 4.5 semanas.
     '''
     def __init__(self, nome: str, idade: int, email: str, carga_horaria_semanal: int):
-        self.nome = nome
-        self.idade = idade
-        self.email = email
-        self.altera_carga_horaria(carga_horaria_semanal)
+        super().__init__(nome, idade, email, carga_horaria_semanal)
         self.salario_hora = 35.00
  
     def altera_carga_horaria(self, nova_carga_horaria: int) -> None:
@@ -118,10 +115,7 @@ class Estagiario(Funcionario):
       possui sempre 4.5 semanas, e por fim adicione o auxílio alimentação.
     '''
     def __init__(self, nome: str, idade: int, email: str, carga_horaria_semanal: int):
-        self.nome = nome
-        self.idade = idade
-        self.email = email
-        self.altera_carga_horaria(carga_horaria_semanal)
+        super().__init__(nome, idade, email, carga_horaria_semanal)
         self.salario_hora = 15.50
  
     def altera_carga_horaria(self, nova_carga_horaria: int) -> None:
@@ -158,10 +152,7 @@ class Vendedor(Funcionario):
     '''
 
     def __init__(self, nome: str, idade: int, email: str, carga_horaria_semanal: int):
-        self.nome = nome
-        self.idade = idade
-        self.email = email
-        self.altera_carga_horaria(carga_horaria_semanal)
+        super().__init__(nome, idade, email, carga_horaria_semanal)
         self.salario_hora = 30.00
         self.__num_visitas = 0
  
@@ -267,7 +258,6 @@ class Empresa:
         for Funcionario in self.equipe:
             if Funcionario == Vendedor:
                 lista_visitas[Funcionario] = [email, vendedor.self.__num_visitas]
-        
         return lista_visitas
             
 
