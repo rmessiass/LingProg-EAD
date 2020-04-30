@@ -30,7 +30,7 @@ class Funcionario(Pessoa):
         '''
         super().__init__(nome, idade)
         self.email = email
-        self.altera_carga_horaria(carga_horaria_semanal)
+        self.carga_horaria_semanal = carga_horaria_semanal
         self.salario_hora = 0
         
     def calcula_salario(self) -> float:
@@ -94,14 +94,22 @@ class Programador(Funcionario):
     def __init__(self, nome: str, idade: int, email: str, carga_horaria_semanal: int):
         super().__init__(nome, idade, email, carga_horaria_semanal)
         self.salario_hora = 35.00
+
+    @property
+    def carga_horaria_semanal(self):
+        return self._carga_horaria_semanal
+
+    @carga_horaria_semanal.setter
+    def carga_horaria_semanal(self, carga_horaria_semanal):
+        if carga_horaria_semanal < 20 or carga_horaria_semanal > 40:
+            raise ValueError
+        self._carga_horaria_semanal = carga_horaria_semanal
  
     def altera_carga_horaria(self, nova_carga_horaria: int) -> None:
         '''
         altera a carga horária do funcionário, respeitando o limite de horas por categoria.
         Caso o numero informado seja inválido, levanta um ValueError
         '''
-        if nova_carga_horaria < 20 or nova_carga_horaria > 40:
-            raise ValueError
         self.carga_horaria_semanal = nova_carga_horaria
 
 
@@ -117,14 +125,22 @@ class Estagiario(Funcionario):
     def __init__(self, nome: str, idade: int, email: str, carga_horaria_semanal: int):
         super().__init__(nome, idade, email, carga_horaria_semanal)
         self.salario_hora = 15.50
+
+    @property
+    def carga_horaria_semanal(self):
+        return self._carga_horaria_semanal
+
+    @carga_horaria_semanal.setter
+    def carga_horaria_semanal(self, carga_horaria_semanal):
+        if carga_horaria_semanal < 16 or carga_horaria_semanal > 30:
+            raise ValueError
+        self._carga_horaria_semanal = carga_horaria_semanal
  
     def altera_carga_horaria(self, nova_carga_horaria: int) -> None:
         '''
         altera a carga horária do funcionário, respeitando o limite de horas por categoria.
         Caso o numero informado seja inválido, levanta um ValueError
         '''
-        if nova_carga_horaria < 16 or nova_carga_horaria > 30:
-            raise ValueError
         self.carga_horaria_semanal = nova_carga_horaria
     
     def calcula_salario(self) -> float:
@@ -155,14 +171,22 @@ class Vendedor(Funcionario):
         super().__init__(nome, idade, email, carga_horaria_semanal)
         self.salario_hora = 30.00
         self.__num_visitas = 0
+
+    @property
+    def carga_horaria_semanal(self):
+        return self._carga_horaria_semanal
+
+    @carga_horaria_semanal.setter
+    def carga_horaria_semanal(self, carga_horaria_semanal):
+        if carga_horaria_semanal < 15 or carga_horaria_semanal > 45:
+            raise ValueError
+        self._carga_horaria_semanal = carga_horaria_semanal
  
     def altera_carga_horaria(self, nova_carga_horaria: int) -> None:
         '''
         altera a carga horária do funcionário, respeitando o limite de horas por categoria.
         Caso o numero informado seja inválido, levanta um ValueError
         '''
-        if nova_carga_horaria < 15 or nova_carga_horaria > 45:
-            raise ValueError
         self.carga_horaria_semanal = nova_carga_horaria
     
     def calcula_salario(self) -> float:
@@ -180,9 +204,8 @@ class Vendedor(Funcionario):
         '''
         if type(n_visitas) is not int:
             raise TypeError
-        else:
-            if n_visitas <= 0:
-                raise ValueError
+        elif n_visitas <= 0:
+            raise ValueError
         self.__num_visitas += n_visitas
 
     def consulta_visitas(self) -> int:
@@ -232,8 +255,8 @@ class Empresa:
         calcular o próprio salário e acumule isso numa variável auxiliar.
         '''
         folha = 0
-        for Funcionario in self.equipe:
-            folha += Funcionario.calcula_salario()
+        for func in self.equipe:
+            folha += func.calcula_salario()
         return folha
 
     def dissidio_anual(self) -> None:
@@ -242,8 +265,8 @@ class Empresa:
         DICA: idem ao método de folha de pagamento, percorra a lista de funcionários faça
         cada objeto funcionário aumentar o próprio salário base por hora.
         '''
-        for Funcionario in self.equipe:
-            Funcionario.aumenta_salario()
+        for func in self.equipe:
+            func.aumenta_salario()
 
     def listar_visitas(self) -> Dict[str, int]:
         '''
@@ -255,17 +278,16 @@ class Empresa:
         ao dicionário, e por fim retorne esse dicionário (não precisa guardar em um atributo).
         '''
         lista_visitas = {}
-        for Funcionario in self.equipe:
-            if Funcionario == Vendedor:
-                lista_visitas[Funcionario] = [email, vendedor.self.__num_visitas]
+        for func in self.equipe:
+            if isinstance(func, Vendedor):
+                lista_visitas[func.email] = func.consulta_visitas()
         return lista_visitas
-            
 
     def zerar_visitas_vendedores(self) -> None:
         '''
         Zera as visitas de todos os funcionário, use a dica do método listar_visitas e
         para cada vendedor, chame o método de zerar visitas do vendedor.
         '''
-        for Funcionario in self.equipe:
-            if Funcionario == Vendedor:
-                Funcionario.Vendedor.zerar_visitas()
+        for func in self.equipe:
+            if isinstance(func, Vendedor):
+                func.zerar_visitas()
